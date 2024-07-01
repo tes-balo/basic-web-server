@@ -1,8 +1,9 @@
 import os
 from fastapi import FastAPI, Request
-import socket, ipinfo
+import socket
 
 from dotenv import load_dotenv
+import uvicorn
 
 load_dotenv()
 
@@ -20,12 +21,12 @@ app = FastAPI()
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
 
-handler = ipinfo.getHandler(get_token())
-data = handler.getDetails(ip_address)
+# handler = ipinfo.getHandler(get_token())
+# data = handler.getDetails(ip_address)
 
 
-def get_location():
-    return data.city
+# def get_location():
+#     return data.city
 
 
 @app.get("/api/hello")
@@ -89,3 +90,6 @@ def get_index(visitor_name: str, request: Request):
 # app.listen(PORT, () => {
 #     console.log(`Server is running on port ${PORT}`);
 # });
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
