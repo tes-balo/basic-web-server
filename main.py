@@ -22,7 +22,7 @@ def get_token():
 def get_client_ip():
     hostname = socket.gethostname()
     ip_address = socket.gethostbyname(hostname)
-
+    print(ip_address)
     return ip_address
 
 
@@ -30,6 +30,18 @@ WEATHER_API_KEY = get_token()
 CLIENT_IP = get_client_ip()
 
 app = FastAPI()
+
+# def get_geolocation_response():
+#     res = httpx.get(
+#         f"https://api.ipgeolocation.io/ipgeo?apiKey={GEOLOCATION_API_KEY}"
+#     )
+
+#     print(res.json())
+
+#     # Check if the request was successful
+#     geolocation_data = res.json()
+
+#     return geolocation_data
 
 
 def get_weather_response():

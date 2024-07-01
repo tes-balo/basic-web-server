@@ -1,1 +1,1 @@
-web: uvicorn main:app --port ${PORT:-8000} --host 0.0.0.0  # type: ignore
+web: uvicorn main:app --port ${PORT:-8000} --host 0.0.0.0 --proxy-headers # type: ignore
