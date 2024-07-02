@@ -2,7 +2,7 @@ import os
 from typing import Any
 from fastapi import FastAPI
 
-import socket
+# import socket
 
 from dotenv import load_dotenv
 import httpx
@@ -11,42 +11,49 @@ import httpx
 load_dotenv()
 
 
-def get_token():
-    WEATHER_API_KEY = os.environ.get("WEATHER_API_KEY")
-    if not WEATHER_API_KEY:
-        raise ValueError("WEATHER_API_KEY is not set")
+keys = {
+    "WEATHER_API_KEY": os.environ.get("WEATHER_API_KEY"),
+    "GEOLOCATION_API_KEY": os.environ.get("GEOLOCATION_API_KEY"),
+}
 
-    return WEATHER_API_KEY
+if not keys["WEATHER_API_KEY"]:
+    raise ValueError("WEATHER_API_KEY is not set")
 
-
-def get_client_ip():
-    hostname = socket.gethostname()
-    ip_address = socket.gethostbyname(hostname)
-    print(ip_address)
-    return ip_address
+if not keys["GEOLOCATION_API_KEY"]:
+    raise ValueError("GEO Key is not set")
 
 
-WEATHER_API_KEY = get_token()
-CLIENT_IP = get_client_ip()
+# def get_client_ip():
+#     hostname = socket.gethostname()
+#     ip_address = socket.gethostbyname(hostname)
+#     print(ip_address)
+#     return ip_address
+
+
+WEATHER_API_KEY = keys["WEATHER_API_KEY"]
+GEOLOCATION_API_KEY = keys["GEOLOCATION_API_KEY"]
 
 app = FastAPI()
 
-# def get_geolocation_response():
-#     res = httpx.get(
-#         f"https://api.ipgeolocation.io/ipgeo?apiKey={GEOLOCATION_API_KEY}"
-#     )
 
-#     print(res.json())
+def get_geolocation_response():
+    res = httpx.get(f"https://api.ip2location.io/?key={GEOLOCATION_API_KEY}")
 
-#     # Check if the request was successful
-#     geolocation_data = res.json()
+    print(res.json())
 
-#     return geolocation_data
+    # Check if the request was successful
+    geolocation_data = res.json()
+
+    return geolocation_data
+
+
+geolocation_response = get_geolocation_response()
+client_ip = geolocation_response["city_name"]
 
 
 def get_weather_response():
     res = httpx.get(
-        f"https://api.weatherapi.com/v1/current.json?key={WEATHER_API_KEY}&q={CLIENT_IP}"
+        f"https://api.weatherapi.com/v1/current.json?key={WEATHER_API_KEY}&q={client_ip}"
     )
 
     print(res.json())
@@ -70,7 +77,7 @@ def get_index(visitor_name: str):
     #     return {"error": "Client information is not available"
 
     return {
-        "client_ip": CLIENT_IP,
+        "client_ip": client_ip,
         "location": location_name,
         "greeting": f"Hello, {visitor_name}!, the temperature is {location_tempt} degrees Celcius in {location_name}",
     }
