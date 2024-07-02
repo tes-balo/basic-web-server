@@ -48,7 +48,8 @@ def get_geolocation_response():
 
 
 geolocation_response = get_geolocation_response()
-client_ip = geolocation_response["city_name"]
+client_ip = geolocation_response["ip"]
+location_name = geolocation_response["city_name"]
 
 
 def get_weather_response():
@@ -66,7 +67,7 @@ def get_weather_response():
 
 weather_response: dict[str, dict[str, Any]] = get_weather_response()
 
-location_name: str = weather_response["location"]["name"]
+# location_name: str = weather_response["location"]["name"]
 location_tempt: float = weather_response["current"]["temp_c"]
 
 
